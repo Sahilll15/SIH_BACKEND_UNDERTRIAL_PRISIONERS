@@ -4,7 +4,7 @@ const cors = require('cors')
 const caseRoutes = require('./routes/case.routes')
 const PrisionerRoutes = require('./routes/priosioner.routes')
 const mongoose = require('mongoose')
-const mongoUrl = 'mongodb://localhost:27017/SIH'
+const mongoUrl = 'mongodb+srv://192105adityashah:IFpXM75V3PCFw4Wg@cluster0.6ct3mek.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(mongoUrl).then(() => {
     console.log('Connected to database')
