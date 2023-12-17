@@ -124,11 +124,38 @@ const setUserType = async (req, res) => {
 }
 
 
+const fetchLawyers = async (req, res) => {
+
+    try {
+        const lawyers = await Prisioner.find({
+            type: "Lawyer"
+        })
+
+        res.status(200).json({
+            message: "lawyers fetched",
+            lawyers: lawyers
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({ message: error, error: error })
+    }
+
+}
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {
     SignupPriosioner,
     loginPrisoner,
     getLoggedInUser,
-    setUserType
+    setUserType,
+    fetchLawyers
 }

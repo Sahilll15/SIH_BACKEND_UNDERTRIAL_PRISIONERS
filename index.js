@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const caseRoutes = require('./routes/case.routes')
 const PrisionerRoutes = require('./routes/priosioner.routes')
+const DocumentRoutes = require('./routes/document.routes')
 const mongoose = require('mongoose')
 const mongoUrl = 'mongodb://localhost:27017/SIH'
 
@@ -28,3 +29,5 @@ app.listen(8000, () => {
 
 app.use('/api/v1/case', caseRoutes)
 app.use('/api/v1/priosioner', PrisionerRoutes)
+app.use('/api/v1/document', DocumentRoutes)
+

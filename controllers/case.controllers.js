@@ -18,6 +18,36 @@ const createCase = async (req, res) => {
 
 }
 
+
+const updateCase = async (req, res) => {
+    const { cnr_number } = req.params;
+    const { obj } = req.body;
+
+    try {
+        const casee = await Case.findOne({ cnr_number: cnr_number });
+
+        if (!casee) {
+            res.status(404).json({ message: "Case not found" });
+            return;
+        }
+
+
+
+        const updatedCase = await Case.findOneAndUpdate(
+            { cnr_number: cnr_number },
+            obj,
+            { new: true }
+        );
+
+        res.status(200).json({ case: updatedCase, message: 'Case updated' });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { updateCase };
+
 const getAllCase = async (req, res) => {
     try {
         const cases = await Case.find()
