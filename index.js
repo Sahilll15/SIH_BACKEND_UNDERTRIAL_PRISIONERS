@@ -4,7 +4,11 @@ const cors = require('cors')
 const caseRoutes = require('./routes/case.routes')
 const PrisionerRoutes = require('./routes/priosioner.routes')
 const DocumentRoutes = require('./routes/document.routes')
+const FirRoutes = require('./routes/Fir.routes')
+const caseFightRoutes = require('./routes/caseFlight.routes')
+const adminRoutes = require('./routes/admin.routes')
 const mongoose = require('mongoose')
+
 const mongoUrl = 'mongodb://localhost:27017/SIH'
 
 mongoose.connect(mongoUrl).then(() => {
@@ -30,4 +34,17 @@ app.listen(8000, () => {
 app.use('/api/v1/case', caseRoutes)
 app.use('/api/v1/priosioner', PrisionerRoutes)
 app.use('/api/v1/document', DocumentRoutes)
+app.use('/api/v1/fir', FirRoutes)
+app.use('/api/v1/admin', adminRoutes)
+app.use('/api/v1/caseFight', caseFightRoutes)
+
+
+
+
+
+
+
+
+
+
 

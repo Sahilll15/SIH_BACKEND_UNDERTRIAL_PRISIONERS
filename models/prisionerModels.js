@@ -13,11 +13,18 @@ const prisionerModel = mongoose.Schema({
         type: String,
         required: true
     },
+    id: {
+        type: String,
+
+    },
     phoneNumber: {
         type: Number,
         required: true
     },
     type: {
+        type: String
+    },
+    addharCard: {
         type: String
     }
 
