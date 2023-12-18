@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 
 const firModel = mongoose.Schema({
+    FirNumber: {
+        type: Number
+    },
     accusedName: {
         type: String,
 
@@ -50,11 +53,17 @@ const firModel = mongoose.Schema({
         }
     ],
     informer: {
-        type: String,
+        name: {
+            type: String
+        },
+        address: {
+            type: String
+        },
+        contactNumber: {
+            type: Number
+        }
     },
-    informerAddress: {
-        type: String,
-    },
+
 })
 const Fir = mongoose.model('Fir', firModel)
 

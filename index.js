@@ -8,8 +8,12 @@ const FirRoutes = require('./routes/Fir.routes')
 const caseFightRoutes = require('./routes/caseFlight.routes')
 const adminRoutes = require('./routes/admin.routes')
 const mongoose = require('mongoose')
+require('dotenv').config()
 
+
+// const mongoUrl = process.env.mongoUrl
 const mongoUrl = 'mongodb://localhost:27017/SIH'
+
 
 mongoose.connect(mongoUrl).then(() => {
     console.log('Connected to database')

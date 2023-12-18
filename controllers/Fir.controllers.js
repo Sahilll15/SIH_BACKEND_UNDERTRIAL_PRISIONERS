@@ -1,18 +1,28 @@
 
 const { Fir } = require('../models/FirModel')
 
+function generateRandomNumber() {
+    const min = 1000;
+    const max = 9999;
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+
 const createFir = async (req, res) => {
     try {
 
 
-        const { accusedName, accusedAge, accusedAddharCard, firDate, firPlace, firDescription, PoliceStation, policeName, sections, informer, informerAddress, firStatus } = req.body;
+        const { accusedGender, accusedAddress, accusedName, accusedAge, accusedAddharCard, firDate, firPlace, firDescription, PoliceStation, policeName, sections, informer, informerAddress, firStatus } = req.body;
 
         const newFir = await Fir.create({
+            FirNumber: generateRandomNumber(),
             firDate: firDate,
             firPlace: firPlace,
             accusedAddharCard: accusedAddharCard,
             accusedAge: accusedAge,
             accusedName: accusedName,
+            accusedAddress: accusedAddress,
+            accusedGender: accusedGender,
             firDescription: firDescription,
             PoliceStation: PoliceStation,
             policeName: policeName,
@@ -108,10 +118,41 @@ const getFirById = async (req, res) => {
 }
 
 
+const getFirByNumber = async (req, res) => {
+    const { FirNumber
+    } = req.params;
+    try {
+        const fir = await Fir.find({
+            FirNumber: FirNumber
+        })
+
+        if (fir.length === 0) {
+            res.status(401).json({
+                message: "Fir Not Created"
+            })
+            return
+        }
+
+        console.log('fir', fir)
+
+        res.status(200).json({
+            message: "fir created",
+            fir: fir
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({
+            error: error
+        })
+    }
+}
+
+
 
 module.exports = {
     createFir,
     getFir,
     getFirById,
-    getFirByUser
+    getFirByUser,
+    getFirByNumber
 }
