@@ -3,8 +3,13 @@ const app = express()
 const cors = require('cors')
 const caseRoutes = require('./routes/case.routes')
 const PrisionerRoutes = require('./routes/priosioner.routes')
+const DocumentRoutes = require('./routes/document.routes')
+const FirRoutes = require('./routes/Fir.routes')
+const caseFightRoutes = require('./routes/caseFlight.routes')
+const adminRoutes = require('./routes/admin.routes')
 const mongoose = require('mongoose')
-const mongoUrl = 'mongodb+srv://192105adityashah:IFpXM75V3PCFw4Wg@cluster0.6ct3mek.mongodb.net/?retryWrites=true&w=majority'
+
+const mongoUrl = 'mongodb+srv://sahilchalke1011:chalke10@cluster0.bpofe3z.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(mongoUrl).then(() => {
     console.log('Connected to database')
@@ -28,3 +33,18 @@ app.listen(8000, () => {
 
 app.use('/api/v1/case', caseRoutes)
 app.use('/api/v1/priosioner', PrisionerRoutes)
+app.use('/api/v1/document', DocumentRoutes)
+app.use('/api/v1/fir', FirRoutes)
+app.use('/api/v1/admin', adminRoutes)
+app.use('/api/v1/caseFight', caseFightRoutes)
+
+
+
+
+
+
+
+
+
+
+
