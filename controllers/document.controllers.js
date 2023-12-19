@@ -16,40 +16,58 @@ const s3 = new AWS.S3();
 const uploadDocument = async (req, res) => {
     const { name, document } = req.body;
     try {
-        const { userId } = req.user;
-        console.log(userId)
-        const newDocument = await Document.create({
-            name: name,
-            userId: userId
-        });
+        const { userId } = req.user || {};
+        console.log(userId);
 
-        if (req.file) {
-            const file = req.file;
-            const fileKey = Date.now() + '-' + file.originalname;
-
-            const params = {
-                Bucket: process.env.AWS_BUCKET_NAME,
-                Key: fileKey,
-                Body: await fs.readFile(file.path),
-                ContentType: file.mimetype,
-            };
-
-            const uploadResult = await s3.upload(params).promise();
-
-            console.log('uploadResult', uploadResult);
-
-            newDocument.document = uploadResult.Location;
-            await newDocument.save();
-
-            res.status(200).json({
-                message: "New document added",
-                document: newDocument
+        if (!userId) {
+            return res.status(401).json({
+                error: 'Unauthorized',
             });
         }
+
+        const newDocument = await Document.create({
+            name: name,
+            userId: userId,
+        }).catch(error => {
+            console.error('Error creating new document:', error);
+            throw error;
+        });
+
+        if (!req.file) {
+            return res.status(400).json({
+                error: 'No file provided',
+            });
+        }
+
+        const file = req.file;
+        console.log('file', file);
+        const fileKey = Date.now() + '-' + file.originalname;
+
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: fileKey,
+            Body: await fs.readFile(file.path),
+            ContentType: file.mimetype,
+        };
+
+        const uploadResult = await s3.upload(params).promise();
+
+        console.log('uploadResult', uploadResult);
+
+        newDocument.document = uploadResult.Location;
+        await newDocument.save();
+
+        // Cleanup temporary file
+        await fs.unlink(file.path);
+
+        res.status(200).json({
+            message: 'New document added',
+            document: newDocument,
+        });
     } catch (error) {
         console.error(error);
-        res.status(401).json({
-            error: error.message
+        res.status(500).json({
+            error: error.message,
         });
     }
 };

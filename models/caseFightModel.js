@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const caseFightSchema = new mongoose.Schema({
+    FirNumber: {
+        type: String,
+        required: true
+    },
     accused: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Prisioner'

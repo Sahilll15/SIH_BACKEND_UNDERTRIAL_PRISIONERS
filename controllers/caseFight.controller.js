@@ -1,8 +1,12 @@
-const { caseFight } = require('../models/caseFightModel')
+const { Fir } = require('../models/FirModel');
+const { caseFight } = require('../models/caseFightModel');
+const { lawyer } = require('../models/lawyerModels');
+const { Prisioner } = require('../models/prisionerModels');
 
 
 const createCaseFightRequest = async (req, res) => {
     const { lawyerId } = req.params;
+    const { FirNumber } = req.body;
     try {
         const { userId } = req.user;
 
@@ -16,10 +20,74 @@ const createCaseFightRequest = async (req, res) => {
         //todo://
         //add furture validation
 
+        if (!FirNumber || !lawyer || !userId) {
+            res.status(401).json({
+                message: 'FirNumber or lawyer or user not found'
+            })
+            return
+        }
+
+        const CaseFightALreadyExists = await caseFight.findOne({
+            FirNumber: FirNumber
+        })
+
+        if (CaseFightALreadyExists) {
+            res.status(401).json({
+                message: 'CaseFight already exists'
+            })
+            return
+        }
+
+        const Lawyer = await lawyer.findById(lawyerId);
+
+        if (!Lawyer) {
+            res.status(401).json({
+                message: 'lawyer not found'
+            })
+            return
+        }
 
 
+        const user = await Prisioner.findById(userId)
+
+        console.log(user)
+
+        //find the user and weathher the prisioners has the mentioned FirNumber
+        if (!user) {
+            res.status(401).json({
+                message: 'user not found'
+            })
+            return
+        }
+
+        //check if the user has the FirNumber
+        const firs = await Fir.find({
+            accusedAddharCard: user.addharCard
+        })
+
+
+
+        console.log('firs', firs)
+
+        let hasCase = false;
+
+        firs.forEach(fir => {
+            if (fir.FirNumber === Number(FirNumber)) {
+                hasCase = true;
+            }
+        }
+
+        )
+
+        if (!hasCase) {
+            res.status(401).json({
+                message: 'user does not have the case'
+            })
+            return
+        }
 
         const newCaseFight = await caseFight.create({
+            FirNumber: FirNumber,
             accused: userId,
             lawyer: lawyerId
         })

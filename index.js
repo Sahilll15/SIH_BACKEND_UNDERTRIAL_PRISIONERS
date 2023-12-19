@@ -7,6 +7,7 @@ const DocumentRoutes = require('./routes/document.routes')
 const FirRoutes = require('./routes/Fir.routes')
 const caseFightRoutes = require('./routes/caseFlight.routes')
 const adminRoutes = require('./routes/admin.routes')
+const lawyerRoutes = require('./routes/lawyer.routes')
 const mongoose = require('mongoose')
 require('dotenv').config()
 
@@ -41,6 +42,8 @@ app.use('/api/v1/document', DocumentRoutes)
 app.use('/api/v1/fir', FirRoutes)
 app.use('/api/v1/admin', adminRoutes)
 app.use('/api/v1/caseFight', caseFightRoutes)
+app.use('/api/v1/lawyer', lawyerRoutes)
+
 
 
 
