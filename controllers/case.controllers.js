@@ -92,8 +92,74 @@ const getCaseByCnr = async (req, res) => {
 
 
 
+const { Prisioner } = require('../models/prisionerModels');
+
+const addCaseToPrisioner = async (req, res) => {
+    const { cnr_number, registration_number } = req.body;
+    const { prisionerId } = req.params;
+
+    if (!cnr_number || !registration_number || !prisionerId) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Missing required fields" 
+        });
+    }
+    
+    try {
+        // Find the case by CNR number and registration number
+        const caseToAdd = await Case.findOne({
+            cnr_number: cnr_number,
+            'cnr_details.case_details.registration_number': registration_number
+        });
+
+        if (!caseToAdd) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Case not found with the provided CNR number and registration number" 
+            });
+        }
+
+        // Find the prisoner by ID
+        const prisioner = await Prisioner.findById(prisionerId);
+
+        if (!prisioner) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Prisoner not found" 
+            });
+        }
+
+        // Check if the case is already in the prisoner's cases array
+        if (prisioner.cases && prisioner.cases.includes(caseToAdd._id)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "This case is already added to your profile" 
+            });
+        }
+
+        // Add the case to the prisoner's cases array
+        prisioner.cases = prisioner.cases || [];
+        prisioner.cases.push(caseToAdd._id);
+        await prisioner.save();
+
+        return res.status(200).json({ 
+            success: true, 
+            message: "Case successfully added to your profile", 
+            case: caseToAdd 
+        });
+    } catch (error) {
+        console.error("Error adding case to prisoner:", error);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Server error while adding case to profile", 
+            error: error.message 
+        });
+    }
+};
+
 module.exports = {
     createCase,
     getAllCase,
-    getCaseByCnr
+    getCaseByCnr,
+    addCaseToPrisioner
 }

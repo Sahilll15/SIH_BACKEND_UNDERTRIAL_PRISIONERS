@@ -36,10 +36,11 @@ const lawyerModel = new mongoose.Schema({
     addharCard: {
         type: String,
         requied: true
-    }
-
-
-
+    },
+    cases: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Case'
+    }]
 })
 
 const lawyer = mongoose.model('lawyer', lawyerModel)

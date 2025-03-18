@@ -63,10 +63,7 @@ const signupLawyer = async (req, res) => {
 
         }
         else {
-            res.status(401).json({
-                message: "certificate is required"
-            })
-            return
+         console.log('certificate is required')
         }
         const savedLawyer = await newLawyer.save()
         console.log(savedLawyer)

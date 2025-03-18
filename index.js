@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const path = require('path')
 const caseRoutes = require('./routes/case.routes')
 const PrisionerRoutes = require('./routes/priosioner.routes')
 const DocumentRoutes = require('./routes/document.routes')
@@ -25,6 +26,9 @@ mongoose.connect(mongoUrl).then(() => {
 app.use(express.json())
 
 app.use(cors())
+
+// Serve uploaded files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Middleware to log the URL
 app.use((req, res, next) => {
@@ -55,3 +59,19 @@ app.use('/api/v1/lawyer', lawyerRoutes)
 
 
 
+
+
+//sahilchalke1011@gmail.com
+
+//Sahil@123
+
+// 9022516901
+//606332118694
+
+//abhishek@gmail.com
+//Abhishek@123
+
+// 606332118694
+// 9022516901
+
+// 606332118694

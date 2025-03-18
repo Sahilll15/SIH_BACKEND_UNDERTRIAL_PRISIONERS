@@ -2,13 +2,14 @@ const express = require('express')
 const router = express.Router()
 
 
-const { uploadDocument, getDocuments, deleteDocument } = require('../controllers/document.controllers')
+const { uploadDocument, getDocuments, deleteDocument, getDocumentsByPrisonerId } = require('../controllers/document.controllers')
 const { validateToken } = require('../middlewares/validateToken')
 const { upload } = require('../middlewares/upload')
 
-router.post('/upload', validateToken, upload.single('docs'), uploadDocument)
-router.get('/getDocuments', validateToken, getDocuments)
-router.delete('/deleteDocument/:id', validateToken, deleteDocument)
+router.post('/upload/:prisionerId', upload.single('docs'), uploadDocument)
+router.get('/getDocuments/:prisionerId', getDocuments)
+router.delete('/deleteDocument/:id/:prisionerId', deleteDocument)
+router.get('/prisoner/:prisionerId', getDocumentsByPrisonerId)
 
 
 

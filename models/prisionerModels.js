@@ -26,8 +26,15 @@ const prisionerModel = mongoose.Schema({
     },
     addharCard: {
         type: String
-    }
-
+    },
+    cases: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Case'
+    }],
+    documents: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Documents'
+    }]
 })
 
 

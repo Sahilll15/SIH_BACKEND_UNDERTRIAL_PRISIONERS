@@ -139,10 +139,63 @@ const fetchLawyers = async (req, res) => {
     }
 };
 
+const { Case } = require('../models/caseModel');
+
+const getPrisionerCases = async (req, res) => {
+    try {
+        const { prisionerId } = req.params;
+        
+        // Validate prisoner ID
+        if (!prisionerId) {
+            return res.status(400).json({
+                success: false,
+                message: "Prisoner ID is required"
+            });
+        }
+
+        // Find the prisoner by ID
+        const prisoner = await Prisioner.findById(prisionerId);
+        
+        if (!prisoner) {
+            return res.status(404).json({
+                success: false,
+                message: "Prisoner not found"
+            });
+        }
+
+        // If prisoner has no cases yet
+        if (!prisoner.cases || prisoner.cases.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: "No cases found for this prisoner",
+                cases: []
+            });
+        }
+
+        // Populate the cases array with full case details
+        const populatedPrisoner = await Prisioner.findById(prisionerId).populate('cases');
+        
+        return res.status(200).json({
+            success: true,
+            message: "Cases retrieved successfully",
+            cases: populatedPrisoner.cases
+        });
+
+    } catch (error) {
+        console.error("Error fetching prisoner cases:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while fetching cases",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     SignupPriosioner,
     loginPrisoner,
     getLoggedInUser,
     setUserType,
     fetchLawyers,
+    getPrisionerCases
 };
