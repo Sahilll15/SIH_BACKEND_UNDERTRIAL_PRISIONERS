@@ -1,6 +1,8 @@
 const { Prisioner } = require("../models/prisionerModels");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { lawyer } = require("../models/lawyerModels");
+const {Governor}=require('../models/governorModels')
 require("dotenv").config();
 
 const SignupPriosioner = async (req, res) => {
@@ -83,16 +85,28 @@ const getLoggedInUser = async (req, res) => {
     try {
         const { userId } = req.user;
 
-        const user = await Prisioner.findById(userId);
+        const isPrisioner = await Prisioner.findById(userId);
+        const isLawyer = await lawyer.findById(userId);
+        const isGovernor = await Governor.findById(userId);
 
-        if (!user) {
+        if (!isPrisioner && !isLawyer && !isGovernor) {
             res.status(401).json({ message: "user not found" });
             return;
         }
 
+        let user;
+
+        if (isPrisioner) {
+            user = { ...isPrisioner._doc, type: 'Prisioner' };
+        } else if (isLawyer) {
+            user = { ...isLawyer._doc, type: 'Lawyer' };
+        } else {
+            user = { ...isGovernor._doc, type: 'Governor' };
+        }
+
         res.status(200).json({
             message: "user verified",
-            user: user,
+            user: user
         });
     } catch (error) {
         console.log(error);
@@ -139,7 +153,6 @@ const fetchLawyers = async (req, res) => {
     }
 };
 
-const { Case } = require('../models/caseModel');
 
 const getPrisionerCases = async (req, res) => {
     try {

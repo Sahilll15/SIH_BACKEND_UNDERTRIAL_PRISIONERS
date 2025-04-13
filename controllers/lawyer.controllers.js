@@ -1,4 +1,4 @@
-const { lawyer } = require('../models/lawyerModels')
+const {lawyer} = require('../models/lawyerModels');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -96,12 +96,12 @@ const loginLawyer = async (req, res) => {
 
         console.log(Lawyer)
 
-        if (!Lawyer.isVerified) {
-            res.status(401).json({
-                message: "Lawyer is not verified"
-            })
-            return
-        }
+        // if (!Lawyer.isVerified) {
+        //     res.status(401).json({
+        //         message: "Lawyer is not verified"
+        //     })
+        //     return
+        // }
 
         const comparePassword = await bcrypt.compare(password, Lawyer.password);
 
@@ -159,9 +159,7 @@ const verifyLawyer = async (req, res) => {
 const getLawyer = async (req, res) => {
     try {
 
-        const Lawyer = await lawyer.find({
-            isVerified: true
-        });
+        const Lawyer = await lawyer.find();
 
 
         if (!Lawyer) {

@@ -9,6 +9,9 @@ const FirRoutes = require('./routes/Fir.routes')
 const caseFightRoutes = require('./routes/caseFlight.routes')
 const adminRoutes = require('./routes/admin.routes')
 const lawyerRoutes = require('./routes/lawyer.routes')
+const goverenrRoutes = require('./routes/goverenr.routes')
+const chatRoutes = require('./routes/chat.routes')
+const notificationRoutes = require('./routes/notification.routes')
 const mongoose = require('mongoose')
 require('dotenv').config()
 
@@ -47,6 +50,9 @@ app.use('/api/v1/fir', FirRoutes)
 app.use('/api/v1/admin', adminRoutes)
 app.use('/api/v1/caseFight', caseFightRoutes)
 app.use('/api/v1/lawyer', lawyerRoutes)
+app.use('/api/v1/goverenr', goverenrRoutes)
+app.use('/api/v1/chat', chatRoutes)
+app.use('/api/v1/notifications', notificationRoutes)
 
 
 

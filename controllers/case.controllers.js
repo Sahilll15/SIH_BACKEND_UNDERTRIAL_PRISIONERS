@@ -1,6 +1,22 @@
 const mongoose = require('mongoose')
 const { Case } = require('../models/caseModel')
 
+/**
+ * Format a date to readable string format
+ * @param {Date} date - Date to format
+ * @returns {String} Formatted date string
+ */
+const formatDate = (date) => {
+  if (!date) return '';
+  
+  const d = new Date(date);
+  return d.toLocaleDateString('en-IN', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
 
 const createCase = async (req, res) => {
     const obj = req.body;
@@ -54,8 +70,25 @@ const getAllCase = async (req, res) => {
             res.status(404).json({ message: "No cases found" })
             return
         }
+        
+        // Format dates in all cases
+        const formattedCases = cases.map(caseItem => {
+            const formattedCase = {
+                ...caseItem._doc,
+                filing_date: formatDate(caseItem.filing_date),
+                filing_date_raw: caseItem.filing_date
+            };
+            
+            // Also format next_hearing_date if it exists in cnr_details
+            if (caseItem.cnr_details && caseItem.cnr_details.case_status && caseItem.cnr_details.case_status.next_hearing_date) {
+                formattedCase.cnr_details.case_status.next_hearing_date_formatted = 
+                    formatDate(caseItem.cnr_details.case_status.next_hearing_date);
+            }
+            
+            return formattedCase;
+        });
 
-        res.status(200).json({ "cases": cases })
+        res.status(200).json({ "cases": formattedCases })
 
 
     } catch (error) {
@@ -79,8 +112,24 @@ const getCaseByCnr = async (req, res) => {
 
             }
         )
+        
+        // Format dates before sending the response
+        let formattedCase = null;
+        if (casee) {
+            formattedCase = {
+                ...casee._doc,
+                filing_date: formatDate(casee.filing_date),
+                filing_date_raw: casee.filing_date
+            };
+            
+            // Also format next_hearing_date if it exists in cnr_details
+            if (casee.cnr_details && casee.cnr_details.case_status && casee.cnr_details.case_status.next_hearing_date) {
+                formattedCase.cnr_details.case_status.next_hearing_date_formatted = 
+                    formatDate(casee.cnr_details.case_status.next_hearing_date);
+            }
+        }
 
-        res.status(200).json({ case: casee, message: 'case found' })
+        res.status(200).json({ case: formattedCase || casee, message: 'case found' })
     }
     catch
     (error) {
